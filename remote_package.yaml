@@ -178,7 +178,7 @@ sensor:
     name: "Photosensor Brightness"
     id: photosensor_brightness
     unit_of_measurement: "%"
-    attenuation: 11db # Appropriate for 0-3.3V range
+    attenuation: 12db # Appropriate for 0-3.3V range
     update_interval: 2s
     filters:
       # Assuming a typical voltage divider where high voltage = dark, low voltage = bright.
@@ -191,7 +191,7 @@ sensor:
     name: "Water Level"
     id: water_level
     unit_of_measurement: "%"
-    attenuation: 11db
+    attenuation: 12db
     update_interval: 2s
     filters:
       # Calibrate based on sensor range (0V to 3.3V representing 0% to 100% level)
