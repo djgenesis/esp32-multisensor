@@ -1,14 +1,15 @@
+logger:
+  level: DEBUG
+  logs:
+    sensor: WARN
+    text_sensor: WARN
 # External components (Dependency for the Radar)
 external_components:
   - source:
       type: git
       url: https://github.com/Mc-Joung/hlk_ld2402_esphome
     refresh: 0ms
-# Standard Components
-improv_serial:
-captive_portal:
-esp32_improv:
-  authorizer: none
+# Web Server & Time
 web_server:
   port: 80
 time:
