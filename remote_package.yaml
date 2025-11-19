@@ -82,7 +82,7 @@ display:
         // --- Display Logic based on Trigger Count (Flashes if > 0) ---
         if (trigger_count > 0) {
           // Only draw text if the flash condition is true.
-          it.fill(0); // Clear the display if flashing
+          it.fill(COLOR_OFF); // Clear the display if flashing
           if (should_flash) {
             if (trigger_count == 3) {
               it.printf(64, 0, id(font_16), TextAlign::TOP_CENTER, "%s", issue_1);
