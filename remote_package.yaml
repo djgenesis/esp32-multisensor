@@ -50,13 +50,11 @@ display:
     model: "SSD1306 128x64"
     address: 0x3C
     lambda: |-
-      // Access sensor states by their IDs defined later in this file
       bool is_present = id(hlk_ld2402_radar_presence).state;
       if (is_present) {
         bool door_open = id(mc38_door_contact).state;
         bool gas_detected = id(mq2_gas_leak).state;
-        // Water level is an analog sensor, checking if it is above 10% (adjust logic as needed)
-        bool water_leak = id(water_level).state > 10.0; 
+        bool water_leak = id(water_level).state > 10.0; // Water leak state (Triggered above 10%)
         bool should_flash = id(homeassistant_time).now().second % 2 == 0; 
         // Determine which issues are present and count them
         const char *issue_1 = nullptr;
@@ -82,7 +80,6 @@ display:
         // --- Display Logic based on Trigger Count (Flashes if > 0) ---
         if (trigger_count > 0) {
           // Only draw text if the flash condition is true.
-          it.fill(COLOR_OFF); // Clear the display if flashing
           if (should_flash) {
             if (trigger_count == 3) {
               it.printf(64, 0, id(font_16), TextAlign::TOP_CENTER, "%s", issue_1);
@@ -97,7 +94,7 @@ display:
             else { // trigger_count == 1
               it.printf(64, 0, id(font_16), TextAlign::TOP_CENTER, "! WARNING !");
               it.printf(64, 22, id(font_16), TextAlign::TOP_CENTER, "%s", issue_1);
-              it.printf(64, 44, id(font_16), TextAlign::TOP_CENTER, "! WARNING !"); 
+              it.printf(64, 44, id(font_16), TextAlign::TOP_CENTER, "! WARNING !"); // Updated to display WARNING
             }
           }
         }
@@ -116,21 +113,25 @@ display:
           it.printf(64, 44, id(font_16), TextAlign::TOP_CENTER, "%s", wifi_status_display);
         }
       } else {
-        // If presence is NOT detected, simply show "STANDBY"
-        it.printf(64, 24, id(font_16), TextAlign::TOP_CENTER, "STANDBY");
+        return; // If presence is NOT detected, simply return a blank screen.
       }
 #######################################
 # SENSORS
 #######################################
 sensor:
 # --- INTERNAL SENSORS ---
+# WIFI Signal Strength
   - platform: wifi_signal
     name: "ESP32 WiFi Signal Strength"
-    id: esp32_wifi_strength_sensor
+    id: esp32_wifi_strength_sensor # Corrected ID to avoid conflict with platform name
     update_interval: 2s
     unit_of_measurement: "dBm"
     device_class: signal_strength
     state_class: measurement
+    on_value:
+      then:
+        - lambda: 'ESP_LOGD("esp32_wifi_strength_sensor", "Value: %.0f %s (%s)", x, id(esp32_wifi_strength_sensor).get_unit_of_measurement().c_str(), id(esp32_wifi_strength_sensor).get_name().c_str());'
+  # ESP32 Uptime
   - platform: uptime
     name: "ESP32 Uptime"
     id: esp32_uptime
@@ -140,8 +141,11 @@ sensor:
     state_class: total_increasing
     filters:
       - lambda: return x / 60.0;
-# --- EXTERNAL SENSORS (Using Pins from User's YAML) ---
-# DHT22 AM2302 Temperature and Humidity Sensor (P21)
+    on_value:
+      then:
+        - lambda: 'ESP_LOGD("esp32_uptime", "Value: %.2f %s (%s)", x, id(esp32_uptime).get_unit_of_measurement().c_str(), id(esp32_uptime).get_name().c_str());'
+# --- EXTERNALSENSORS ---
+# DHT22 AM2302 Temperature and Humidity Sensor (OUT: 21)
   - platform: dht
     pin: GPIO21
     temperature:
@@ -152,6 +156,9 @@ sensor:
       state_class: measurement
       filters:
       - offset: -2.0
+      on_value:
+        then:
+          - lambda: 'ESP_LOGD("dht22_temp", "Value: %.2f %s (%s)", x, id(dht22_temp).get_unit_of_measurement().c_str(), id(dht22_temp).get_name().c_str());'
     humidity:
       name: "DHT22 Humidity"
       id: dht22_hum
@@ -160,8 +167,11 @@ sensor:
       state_class: measurement
       filters:
       - offset: -2.0
-    update_interval: 15s
-# HLK-LD2402 Distance sensor
+      on_value:
+        then:
+          - lambda: 'ESP_LOGD("dht22_hum", "Value: %.2f %s (%s)", x, id(dht22_hum).get_unit_of_measurement().c_str(), id(dht22_hum).get_name().c_str());'
+    update_interval: 15s # Typical interval for DHT sensors
+# Distance sensor - shows how far away the detected person is
   - platform: hlk_ld2402
     id: hlk_ld2402_radar_distance
     name: "HLK-LD2402 Distance"
@@ -172,20 +182,25 @@ sensor:
     filters:
       - lambda: return x / 100.0;
     throttle: 2000ms
-# Photosensitive Brightness Resistance Sensor (Analog In: P32)
+    on_value:
+      then:
+        - lambda: 'ESP_LOGD("hlk_ld2402_radar_distance", "Value: %.2f %s (%s)", x, id(hlk_ld2402_radar_distance).get_unit_of_measurement().c_str(), id(hlk_ld2402_radar_distance).get_name().c_str());'
+# Photosensitive Brightness Resistance Sensor (Analog Out: 32)
   - platform: adc
     pin: GPIO32
     name: "Photosensor Brightness"
     id: photosensor_brightness
     unit_of_measurement: "%"
-    attenuation: 12db # Appropriate for 0-3.3V range
+    attenuation: 12db
     update_interval: 2s
     filters:
-      # Assuming a typical voltage divider where high voltage = dark, low voltage = bright.
       - calibrate_linear:
           - 0.0 -> 100.0 # 0V (bright) maps to 100%
           - 3.3 -> 0.0    # 3.3V (dark) maps to 0%
-# Water Level Sensor (Analog In: P33)
+    on_value:
+      then:
+        - lambda: 'ESP_LOGD("photosensor_brightness", "Value: %.2f %s (%s)", x, id(photosensor_brightness).get_unit_of_measurement().c_str(), id(photosensor_brightness).get_name().c_str());'
+# Water Level Sensor (Analog Out: 33)
   - platform: adc
     pin: GPIO33
     name: "Water Level"
@@ -194,48 +209,91 @@ sensor:
     attenuation: 12db
     update_interval: 2s
     filters:
-      # Calibrate based on sensor range (0V to 3.3V representing 0% to 100% level)
       - calibrate_linear:
           - 0.0 -> 0.0
           - 3.3 -> 100.0
+    on_value:
+      then:
+        - lambda: 'ESP_LOGD("water_level", "Value: %.2f %s (%s)", x, id(water_level).get_unit_of_measurement().c_str(), id(water_level).get_name().c_str());'
 #######################################
 # BINARY SENSORS
 #######################################
 binary_sensor:
 # --- INTERNAL SENSORS ---
+# ESP32 Status
   - platform: status
     name: "ESP32 Status"
     id: esp32_status
-# --- EXTERNAL SENSORS (Using Pins from User's YAML) ---
-# HLK-LD2402 Presence detection
+    on_state:
+      then:
+        - logger.log:
+            format: "Binary Sensor %s changed to %s"
+            args: ["id(esp32_status).get_name().c_str()", "x ? \"ON\" : \"OFF\""]
+# BLE Presence Tracker (Name-Based)
+  - platform: template
+    name: "Mobile Phone Presence"
+    id: mobile_phone_presence_template
+    device_class: presence
+    # Set the state to OFF if the phone is not seen for 5 minutes
+    filters:
+      - delayed_off: 1min
+    on_state:
+      then:
+        - logger.log:
+            format: "Mobile Phone Presence changed to %s"
+            args: ["x ? \"PRESENT\" : \"NOT PRESENT\""]
+# --- EXTERNAL SENSORS ---
+# Presence detection - shows if someone is present in the detection area
   - platform: hlk_ld2402
     id: hlk_ld2402_radar_presence
     name: "HLK-LD2402 Presence"
     device_class: presence
     hlk_ld2402_id: radar_sensor
-# HLK-LD2402 Micromovement detection
+    on_state:
+      then:
+        - logger.log:
+            format: "Binary Sensor %s changed to %s"
+            args: ["id(hlk_ld2402_radar_presence).get_name().c_str()", "x ? \"PRESENT\" : \"CLEAR\""]
+# Micromovement detection - shows if small movements are detected
   - platform: hlk_ld2402
     id: hlk_ld2402_radar_micromovement
     name: "HLK-LD2402 Micromovement"
     device_class: motion
     hlk_ld2402_id: radar_sensor 
-# HLK-LD2402 Power interference detection
+    on_state:
+      then:
+        - logger.log:
+            format: "Binary Sensor %s changed to %s"
+            args: ["id(hlk_ld2402_radar_micromovement).get_name().c_str()", "x ? \"DETECTED\" : \"CLEAR\""]
+# Power interference detection - shows if power supply is causing interference
   - platform: hlk_ld2402
     id: hlk_ld2402_radar_power_interference
     name: "HLK-LD2402 Radar Power Interference"
     device_class: problem
     power_interference: true
     hlk_ld2402_id: radar_sensor
-# MQ2 Smoke Gas Sensor (Digital Out: P18)
+    on_state:
+      then:
+        - logger.log:
+            format: "Binary Sensor %s changed to %s"
+            args: ["id(hlk_ld2402_radar_power_interference).get_name().c_str()", "x ? \"INTERFERENCE\" : \"OK\""]
+# MQ2 Smoke Gas Sensor (Digital Out: 18) - Simple Detection
   - platform: gpio
     pin: 
       number: GPIO18
       mode: INPUT_PULLUP
-      inverted: true # Assuming HIGH is normal, LOW is detection
+      inverted: true
     name: "MQ2 Gas Leak"
     id: mq2_gas_leak
     device_class: gas
-# KY-037 High Sensitivity Sound Detection Module (Digital Out: P26)
+#    internal: true
+#    disabled_by_default: true
+    on_state:
+      then:
+        - logger.log:
+            format: "Binary Sensor %s changed to %s"
+            args: ["id(mq2_gas_leak).get_name().c_str()", "x ? \"LEAK\" : \"CLEAR\""]
+# KY-037 High Sensitivity Sound Detection Module (Digital Out: 26) - Threshold Detection
   - platform: gpio
     pin:
       number: GPIO26
@@ -244,17 +302,27 @@ binary_sensor:
     id: ky_037_loud_sound
     device_class: sound
     filters:
-      - delayed_off: 2s # Prevents rapid flickering
-# IR Obstacle Avoidance Sensor (OUT: P27)
+      - delayed_off: 2s
+    on_state:
+      then:
+        - logger.log:
+            format: "Binary Sensor %s changed to %s"
+            args: ["id(ky_037_loud_sound).get_name().c_str()", "x ? \"DETECTED\" : \"CLEAR\""]
+# IR Obstacle Avoidance Sensor (OUT: 27)
   - platform: gpio
     pin:
       number: GPIO27
       mode: INPUT_PULLUP
-      inverted: true # Typically HIGH when clear, LOW when obstacle is present
+      inverted: true
     name: "IR Obstacle"
     id: ir_obstacle
-    device_class: motion
-# AM312 PIR Motion Sensor (VOUT: P13)
+    device_class: motion    
+    on_state:
+      then:
+        - logger.log:
+            format: "Binary Sensor %s changed to %s"
+            args: ["id(ir_obstacle).get_name().c_str()", "x ? \"OBJECT\" : \"CLEAR\""]  
+# AM312 PIR Motion Sensor (VOUT: 13)
   - platform: gpio
     pin: 
       number: GPIO13
@@ -262,7 +330,12 @@ binary_sensor:
     name: "AM312 PIR Motion"
     id: am312_pir_motion
     device_class: motion
-# KY-031 Percussion Knocking Knock Sensor (S: P25)
+    on_state:
+      then:
+        - logger.log:
+            format: "Binary Sensor %s changed to %s"
+            args: ["id(am312_pir_motion).get_name().c_str()", "x ? \"MOTION\" : \"CLEAR\""]
+# KY-031 Percussion Knocking Knock Sensor (S: 25)
   - platform: gpio
     pin:
       number: GPIO25
@@ -272,48 +345,77 @@ binary_sensor:
     id: ky_031_knock
     filters:
       - delayed_off: 2s
-# MC-38 Door/Window Magnetic Sensor (GPIO: P14)
+    on_state:
+      then:
+        - logger.log:
+            format: "Binary Sensor %s changed to %s"
+            args: ["id(ky_031_knock).get_name().c_str()", "x ? \"DETECTED\" : \"CLEAR\""]
+# MC-38 Door/Window Magnetic Sensor (GPIO: 14)
   - platform: gpio
     pin:
       number: GPIO14
       mode: INPUT_PULLUP
-      inverted: true # Assuming closed = HIGH (via pullup), open = LOW
+      inverted: true
     name: "MC-38 Door/Window Contact"
     id: mc38_door_contact
     device_class: door
+    on_state:
+      then:
+        - logger.log:
+            format: "Binary Sensor %s changed to %s"
+            args: ["id(mc38_door_contact).get_name().c_str()", "x ? \"OPEN\" : \"CLOSED\""]
 #######################################
-# TEXT, SWITCH, BUTTON SENSORS
+# TEXT, SWITCH, BUTTON, NUMBER SENSORS
 #######################################
 text_sensor:
   - platform: version
     name: "ESP32 ESPHome Version"
     id: esp32_esphome_version
+    on_value:
+      then:
+        - lambda: 'ESP_LOGD("esp32_esphome_version", "Value: %s", x.c_str());'
   - platform: wifi_info
     ip_address:
       name: "ESP32 IP Address"
       id: esp32_wifi_ip_address
+      on_value:
+        then:
+          - lambda: 'ESP_LOGD("esp32_wifi_info", "IP Address: %s", x.c_str());'
     ssid:
       name: "ESP32 Connected SSID"
       id: esp32_wifi_ssid_text
+      on_value:
+        then:
+          - lambda: 'ESP_LOGD("esp32_wifi_info", "SSID: %s", x.c_str());'
     bssid:
       name: "ESP32 Connected BSSID"
       id: esp32_wifi_bssid
+      on_value:
+        then:
+          - lambda: 'ESP_LOGD("esp32_wifi_info", "BSSID: %s", x.c_str());'
     mac_address:
       name: "ESP32 WiFi MAC Address"
       id: esp32_wifi_mac_address
+      on_value:
+        then:
+          - lambda: 'ESP_LOGD("esp32_wifi_info", "MAC Address: %s", x.c_str());'
 button:
+# ESP32 Restart
   - platform: restart
     name: "ESP32 Restart"
     entity_category: config
+# ESP32 Safe Mode
   - platform: safe_mode
     name: "ESP32 Safe Mode"
     entity_category: config
+# HLK-LD2402 Calibration
   - platform: template
     name: "HLK-LD2402 Radar Calibration"
     entity_category: config
     icon: "mdi:radar"
     on_press:
       - lambda: id(radar_sensor).calibrate();
+# HLK-LD2402 Save calibration
   - platform: template
     name: "HLK-LD2402 Radar Save Calibration"
     entity_category: config
@@ -321,9 +423,9 @@ button:
     on_press:
       - lambda: id(radar_sensor).save_config();
 switch:
-  # MQ-2 on/off (Power switch on P19)
+  # MQ-2 on/off
   - platform: gpio
-    pin: GPIO19 
+    pin: GPIO19 # Using an unused, general-purpose I/O pin
     name: "MQ2 Gas Sensor Power"
     id: mq2_power_switch
     icon: mdi:power-plug
@@ -333,9 +435,14 @@ switch:
     name: "OLED Display"
     id: display_on_off
     icon: mdi:monitor
+    # Check the actual state of the display component
     lambda: 'return id(oled_display).is_on();'
+    # Set to 'ON' by default when the ESP is powered up
     restore_mode: RESTORE_DEFAULT_ON 
     turn_on_action:
-      - lambda: id(oled_display).turn_on();
+      - lambda: id(oled_display).turn_on(); # Direct call to component method
     turn_off_action:
-      - lambda: id(oled_display).turn_off();
+      - lambda: id(oled_display).turn_off(); # Direct call to component method
+#######################################
+# Automations
+#######################################
