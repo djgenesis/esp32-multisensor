@@ -1,16 +1,9 @@
-#
-# ESP32-MULTISENSOR (GITHUB PACKAGE)
-#
-# This file contains reusable hardware configuration, component definitions, and logic.
-#
-
 # External components (Dependency for the Radar)
 external_components:
   - source:
       type: git
       url: https://github.com/Mc-Joung/hlk_ld2402_esphome
     refresh: 0ms
-
 # Standard Components
 improv_serial:
 captive_portal:
@@ -21,11 +14,9 @@ web_server:
 time:
   - platform: homeassistant
     id: homeassistant_time
-
 # BLUETOOTH TRACKING (Generic enablement is moved to the package)
 esp32_ble_tracker:
 bluetooth_proxy:
-
 # UART CONFIGURATION for HLK-LD2402 Radar
 uart:
   id: uart_bus
@@ -36,21 +27,18 @@ uart:
   parity: NONE
   stop_bits: 1
   rx_buffer_size: 512
-
 # HLK-LD2402 Radar Component
 hlk_ld2402:
   uart_id: uart_bus
   id: radar_sensor
   max_distance: 5.0
   timeout: 5
-
 # I2C Configuration for SSD1306 Display
 i2c:
   sda: GPIO23
   scl: GPIO22
   frequency: 400kHz
   scan: True
-
 # Font definitions for the display
 font:
   - file: "gfonts://Roboto Mono"
@@ -59,7 +47,6 @@ font:
   - file: "gfonts://Roboto Mono"
     size: 16
     id: font_16
-
 # SSD1306 Display Logic
 display:
   - platform: ssd1306_i2c
@@ -75,13 +62,11 @@ display:
         // Water level is an analog sensor, checking if it is above 10% (adjust logic as needed)
         bool water_leak = id(water_level).state > 10.0; 
         bool should_flash = id(homeassistant_time).now().second % 2 == 0; 
-
         // Determine which issues are present and count them
         const char *issue_1 = nullptr;
         const char *issue_2 = nullptr;
         const char *issue_3 = nullptr;
         int trigger_count = 0;
-        
         // Assign issues to slots in order of appearance
         if (water_leak) {
           trigger_count++;
@@ -98,7 +83,6 @@ display:
           else if (issue_2 == nullptr) issue_2 = "DOOR OPEN";
           else issue_3 = "DOOR OPEN";
         }
-
         // --- Display Logic based on Trigger Count (Flashes if > 0) ---
         if (trigger_count > 0) {
           // Only draw text if the flash condition is true.
@@ -139,7 +123,6 @@ display:
         // If presence is NOT detected, simply show "STANDBY"
         it.printf(64, 24, id(font_16), TextAlign::TOP_CENTER, "STANDBY");
       }
-
 #######################################
 # SENSORS
 #######################################
@@ -161,7 +144,6 @@ sensor:
     state_class: total_increasing
     filters:
       - lambda: return x / 60.0;
-
 # --- EXTERNAL SENSORS (Using Pins from User's YAML) ---
 # DHT22 AM2302 Temperature and Humidity Sensor (P21)
   - platform: dht
@@ -183,7 +165,6 @@ sensor:
       filters:
       - offset: -2.0
     update_interval: 15s
-
 # HLK-LD2402 Distance sensor
   - platform: hlk_ld2402
     id: hlk_ld2402_radar_distance
@@ -195,7 +176,6 @@ sensor:
     filters:
       - lambda: return x / 100.0;
     throttle: 2000ms
-
 # Photosensitive Brightness Resistance Sensor (Analog In: P32)
   - platform: adc
     pin: GPIO32
@@ -209,7 +189,6 @@ sensor:
       - calibrate_linear:
           - 0.0 -> 100.0 # 0V (bright) maps to 100%
           - 3.3 -> 0.0    # 3.3V (dark) maps to 0%
-    
 # Water Level Sensor (Analog In: P33)
   - platform: adc
     pin: GPIO33
@@ -223,7 +202,6 @@ sensor:
       - calibrate_linear:
           - 0.0 -> 0.0
           - 3.3 -> 100.0
-    
 #######################################
 # BINARY SENSORS
 #######################################
@@ -232,7 +210,6 @@ binary_sensor:
   - platform: status
     name: "ESP32 Status"
     id: esp32_status
-
 # --- EXTERNAL SENSORS (Using Pins from User's YAML) ---
 # HLK-LD2402 Presence detection
   - platform: hlk_ld2402
@@ -240,14 +217,12 @@ binary_sensor:
     name: "HLK-LD2402 Presence"
     device_class: presence
     hlk_ld2402_id: radar_sensor
-
 # HLK-LD2402 Micromovement detection
   - platform: hlk_ld2402
     id: hlk_ld2402_radar_micromovement
     name: "HLK-LD2402 Micromovement"
     device_class: motion
     hlk_ld2402_id: radar_sensor 
-
 # HLK-LD2402 Power interference detection
   - platform: hlk_ld2402
     id: hlk_ld2402_radar_power_interference
@@ -255,7 +230,6 @@ binary_sensor:
     device_class: problem
     power_interference: true
     hlk_ld2402_id: radar_sensor
-    
 # MQ2 Smoke Gas Sensor (Digital Out: P18)
   - platform: gpio
     pin: 
@@ -265,7 +239,6 @@ binary_sensor:
     name: "MQ2 Gas Leak"
     id: mq2_gas_leak
     device_class: gas
-    
 # KY-037 High Sensitivity Sound Detection Module (Digital Out: P26)
   - platform: gpio
     pin:
@@ -276,7 +249,6 @@ binary_sensor:
     device_class: sound
     filters:
       - delayed_off: 2s # Prevents rapid flickering
-
 # IR Obstacle Avoidance Sensor (OUT: P27)
   - platform: gpio
     pin:
@@ -285,8 +257,7 @@ binary_sensor:
       inverted: true # Typically HIGH when clear, LOW when obstacle is present
     name: "IR Obstacle"
     id: ir_obstacle
-    device_class: motion    
-    
+    device_class: motion
 # AM312 PIR Motion Sensor (VOUT: P13)
   - platform: gpio
     pin: 
@@ -295,7 +266,6 @@ binary_sensor:
     name: "AM312 PIR Motion"
     id: am312_pir_motion
     device_class: motion
-    
 # KY-031 Percussion Knocking Knock Sensor (S: P25)
   - platform: gpio
     pin:
@@ -306,7 +276,6 @@ binary_sensor:
     id: ky_031_knock
     filters:
       - delayed_off: 2s
-      
 # MC-38 Door/Window Magnetic Sensor (GPIO: P14)
   - platform: gpio
     pin:
@@ -316,7 +285,6 @@ binary_sensor:
     name: "MC-38 Door/Window Contact"
     id: mc38_door_contact
     device_class: door
-
 #######################################
 # TEXT, SWITCH, BUTTON SENSORS
 #######################################
@@ -337,7 +305,6 @@ text_sensor:
     mac_address:
       name: "ESP32 WiFi MAC Address"
       id: esp32_wifi_mac_address
-
 button:
   - platform: restart
     name: "ESP32 Restart"
@@ -357,7 +324,6 @@ button:
     icon: "mdi:content-save"
     on_press:
       - lambda: id(radar_sensor).save_config();
-
 switch:
   # MQ-2 on/off (Power switch on P19)
   - platform: gpio
@@ -377,6 +343,3 @@ switch:
       - lambda: id(oled_display).turn_on();
     turn_off_action:
       - lambda: id(oled_display).turn_off();
-
-# NOTE: Automations block is left empty as it's typically device-specific and complex, 
-# but can be added here if generic enough.
