@@ -1,12 +1,17 @@
+# Replace with your own main.yaml file location
 packages:
   remote_package_shorthand: github://djgenesis/esp32-multisensor/main.yaml
 esphome:
   # This will allow for project identification, configuration and updates.
+# Project section is needed for dashboard_import to work
   project:
+# Replace with your project name in the form of "yourgitusername.projecttitle1.projecttitle2"
     name: djgenesis.esp32-multisensor
+# Replace with whatever version you wish
     version: "1"
-# Adopt in ESPhome the main yaml file (public location).
+# Trigger ESPhome to auto discover and "adopt" the main yaml file (public location).
 dashboard_import:
+# Replace with your own main.yaml file location
   package_import_url: github://djgenesis/esp32-multisensor/main.yaml
 # Provision WIFI credebtials through Bluetooth LE
 esp32_improv:
@@ -16,20 +21,23 @@ improv_serial:
 # Provision WIFI credebtials through WIFI Access Point
 wifi:
   ap:
+# Refer it from your secrets file or hard code it
     password: !secret api_encryption_key_ap_password_ota_password
 # ESPHome API encryption
 api:
   encryption:
+# Refer it from your secrets file or hard code it
     key: !secret api_encryption_key_ap_password_ota_password
 # ESPHome Over-The-Air ESP32 update ability and password
 ota:
   - platform: esphome
+# Refer it from your secrets file or hard code it
     password: !secret api_encryption_key_ap_password_ota_password
-# Logs
+# Logs. Change Logs level to your liking (https://esphome.io/components/logger/#log-levels)
 logger:
   level: DEBUG
   logs:
     sensor: WARN
     text_sensor: WARN
-# For Access Point use to provision WIFI credentials
+# (WIFI) Access Point portal to provision WIFI credentials
 captive_portal:
