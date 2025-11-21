@@ -1,3 +1,7 @@
+# CAUTION: CHANGING ANYTHING HERE THAT YOU SHOULDN'T, WILL DISRUPT COMPLETELY THE SENSOR CONNECTION AND/OR FUNCTIONALLITY
+# YOU MAY ONLY GET A NEW UNIQUE "api_encryption_key_ap_password_ota_password" FOR YOUR SECRETS FILE
+# FROM HERE: https://esphome.io/components/api/#configuration-variables
+# AND - FOR ADVANCED USERS ONLY - CHANGE THE LOGS LEVEL AS MENTIONED BELOW
 esphome:
   name: esp32-multisensor
   friendly_name: ESP32 Multisensor
@@ -12,6 +16,7 @@ api:
 ota:
   - platform: esphome
     password: !secret api_encryption_key_ap_password_ota_password
+# Optional: Change your Logs level to your liking (se here: https://esphome.io/components/logger/#log-levels)
 logger:
   level: DEBUG
   logs:
