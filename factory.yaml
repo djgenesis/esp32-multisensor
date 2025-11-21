@@ -13,6 +13,7 @@ esphome:
 dashboard_import:
 # Replace with your own main.yaml file location
   package_import_url: github://djgenesis/esp32-multisensor/main.yaml
+# Import the full main yaml configuartion under your discovered device in ESPHome 
   import_full_config: true
 # Provision WIFI credebtials through Bluetooth LE
 esp32_improv:
@@ -22,8 +23,8 @@ improv_serial:
 # Provision WIFI credebtials through WIFI Access Point
 wifi:
   ap:
-# Refer it from your secrets file or hard code it
-    password: !secret api_encryption_key_ap_password_ota_password
+# Refer it from your secrets file or hard code it. Optional for the factory yaml but advised to have for security purposes in your main.
+#    password: !secret api_encryption_key_ap_password_ota_password
 # ESPHome API encryption
 api:
   encryption:
