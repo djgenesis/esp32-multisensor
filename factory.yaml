@@ -26,3 +26,11 @@ api:
 ota:
   - platform: esphome
     password: !secret api_encryption_key_ap_password_ota_password
+# Logs
+logger:
+  level: DEBUG
+  logs:
+    sensor: WARN
+    text_sensor: WARN
+# For Access Point use to provision WIFI credentials
+captive_portal:
