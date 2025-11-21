@@ -12,7 +12,7 @@ esphome:
 # Trigger ESPhome to auto discover and "adopt" the main yaml file (public location).
 dashboard_import:
 # Replace with your own main.yaml file location
-  package_import_url: github://djgenesis/esp32-multisensor/main.yaml
+  package_import_url: github://djgenesis/esp32-multisensor/main.yaml@main
 # Import the full main yaml configuartion under your discovered device in ESPHome 
   import_full_config: true
 # Provision WIFI credebtials through Bluetooth LE
