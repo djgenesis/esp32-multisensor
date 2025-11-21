@@ -1,0 +1,38 @@
+# Get main.yaml. Replace with your own main.yaml file location
+packages:
+  remote_package_shorthand: github://djgenesis/esp32-multisensor/main.yaml
+esphome:
+  # This will allow for project identification, configuration and updates.
+# Set Project. Project section is needed for dashboard_import to work
+  project:
+# Set Project name. Replace with your project name in the form of "yourgitusername.projecttitle1.projecttitle2"
+    name: djgenesis.esp32-multisensor
+# Set Project version. Replace with whatever version you wish
+    version: "1"
+# Trigger ESPhome to auto discover and "adopt" the main yaml file (public location).
+dashboard_import:
+# Get main.yaml. Replace with your own main.yaml file location
+  package_import_url: github://djgenesis/esp32-multisensor/main.yaml@main
+# Import the full main yaml configuartion under your discovered device in ESPHome 
+  import_full_config: true
+# Provision WIFI credebtials through WIFI Access Point
+wifi:
+  ap:
+# Provision WIFI credebtials through Bluetooth LE
+esp32_improv:
+  authorizer: none
+# Provision WIFI credentials through WIFI Access Point (UI portal)
+captive_portal:
+# Provision WIFI credebtials through PC USB port
+improv_serial:
+# ESPHome API communication
+api:
+# ESPHome Over-The-Air update ability
+ota:
+  - platform: esphome
+# Logs. Change Logs level to your liking (https://esphome.io/components/logger/#log-levels)
+logger:
+  level: DEBUG
+  logs:
+    sensor: WARN
+    text_sensor: WARN
