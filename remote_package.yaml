@@ -130,7 +130,7 @@ sensor:
     state_class: measurement
     on_value:
       then:
-        - lambda: 'ESP_LOGD("esp32_wifi_strength_sensor", "Value: %.0f %s (%s)", x, id(esp32_wifi_strength_sensor).get_unit_of_measurement().c_str(), id(esp32_wifi_strength_sensor).get_name().c_str());'
+        - lambda: 'ESP_LOGD("esp32_wifi_strength_sensor", "Value: %.0f %s (%s)", x, id(esp32_wifi_strength_sensor).get_unit_of_measurement_ref().c_str(), id(esp32_wifi_strength_sensor).get_name().c_str());'
   # ESP32 Uptime
   - platform: uptime
     name: "ESP32 Uptime"
@@ -143,7 +143,7 @@ sensor:
       - lambda: return x / 60.0;
     on_value:
       then:
-        - lambda: 'ESP_LOGD("esp32_uptime", "Value: %.2f %s (%s)", x, id(esp32_uptime).get_unit_of_measurement().c_str(), id(esp32_uptime).get_name().c_str());'
+        - lambda: 'ESP_LOGD("esp32_uptime", "Value: %.2f %s (%s)", x, id(esp32_uptime).get_unit_of_measurement_ref().c_str(), id(esp32_uptime).get_name().c_str());'
 # --- EXTERNALSENSORS ---
 # DHT22 AM2302 Temperature and Humidity Sensor (OUT: 21)
   - platform: dht
@@ -158,7 +158,7 @@ sensor:
       - offset: -2.0
       on_value:
         then:
-          - lambda: 'ESP_LOGD("dht22_temp", "Value: %.2f %s (%s)", x, id(dht22_temp).get_unit_of_measurement().c_str(), id(dht22_temp).get_name().c_str());'
+          - lambda: 'ESP_LOGD("dht22_temp", "Value: %.2f %s (%s)", x, id(dht22_temp).get_unit_of_measurement_ref().c_str(), id(dht22_temp).get_name().c_str());'
     humidity:
       name: "DHT22 Humidity"
       id: dht22_hum
@@ -169,7 +169,7 @@ sensor:
       - offset: -2.0
       on_value:
         then:
-          - lambda: 'ESP_LOGD("dht22_hum", "Value: %.2f %s (%s)", x, id(dht22_hum).get_unit_of_measurement().c_str(), id(dht22_hum).get_name().c_str());'
+          - lambda: 'ESP_LOGD("dht22_hum", "Value: %.2f %s (%s)", x, id(dht22_hum).get_unit_of_measurement_ref().c_str(), id(dht22_hum).get_name().c_str());'
     update_interval: 15s # Typical interval for DHT sensors
 # Distance sensor - shows how far away the detected person is
   - platform: hlk_ld2402
@@ -184,7 +184,7 @@ sensor:
     throttle: 2000ms
     on_value:
       then:
-        - lambda: 'ESP_LOGD("hlk_ld2402_radar_distance", "Value: %.2f %s (%s)", x, id(hlk_ld2402_radar_distance).get_unit_of_measurement().c_str(), id(hlk_ld2402_radar_distance).get_name().c_str());'
+        - lambda: 'ESP_LOGD("hlk_ld2402_radar_distance", "Value: %.2f %s (%s)", x, id(hlk_ld2402_radar_distance).get_unit_of_measurement_ref().c_str(), id(hlk_ld2402_radar_distance).get_name().c_str());'
 # Photosensitive Brightness Resistance Sensor (Analog Out: 32)
   - platform: adc
     pin: GPIO32
@@ -199,7 +199,7 @@ sensor:
           - 3.3 -> 0.0    # 3.3V (dark) maps to 0%
     on_value:
       then:
-        - lambda: 'ESP_LOGD("photosensor_brightness", "Value: %.2f %s (%s)", x, id(photosensor_brightness).get_unit_of_measurement().c_str(), id(photosensor_brightness).get_name().c_str());'
+        - lambda: 'ESP_LOGD("photosensor_brightness", "Value: %.2f %s (%s)", x, id(photosensor_brightness).get_unit_of_measurement_ref().c_str(), id(photosensor_brightness).get_name().c_str());'
 # Water Level Sensor (Analog Out: 33)
   - platform: adc
     pin: GPIO33
@@ -214,7 +214,7 @@ sensor:
           - 3.3 -> 100.0
     on_value:
       then:
-        - lambda: 'ESP_LOGD("water_level", "Value: %.2f %s (%s)", x, id(water_level).get_unit_of_measurement().c_str(), id(water_level).get_name().c_str());'
+        - lambda: 'ESP_LOGD("water_level", "Value: %.2f %s (%s)", x, id(water_level).get_unit_of_measurement_ref().c_str(), id(water_level).get_name().c_str());'
 #######################################
 # BINARY SENSORS
 #######################################
