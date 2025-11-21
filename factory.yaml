@@ -24,7 +24,7 @@ improv_serial:
 wifi:
   ap:
 # Refer it from your secrets file or hard code it. Optional for the factory yaml but advised to have for security purposes in your main.
-#    password: !secret api_encryption_key_ap_password_ota_password
+    password: !secret api_encryption_key_ap_password_ota_password
 # ESPHome API encryption
 api:
   encryption:
