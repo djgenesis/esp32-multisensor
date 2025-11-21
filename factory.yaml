@@ -1,0 +1,28 @@
+packages:
+  remote_package_shorthand: github://djgenesis/esp32-multisensor/main.yaml
+esphome:
+  # This will allow for project identification,
+  # configuration and updates.
+  project:
+    name: djgenesis.esp32-multisensor
+    version: "1"
+# Adopt in ESPhome the main yaml file (public location).
+dashboard_import:
+  package_import_url: github://djgenesis/esp32-multisensor/main.yaml
+# Provision WIFI credebtials through Bluetooth LE
+esp32_improv:
+  authorizer: none
+# Provision WIFI credebtials through PC USB port
+improv_serial:
+# Provision WIFI credebtials through WIFI Access Point
+wifi:
+  ap:
+    password: !secret api_encryption_key_ap_password_ota_password
+# ESPHome API encryption
+api:
+  encryption:
+    key: !secret api_encryption_key_ap_password_ota_password
+# ESPHome Over-The-Air ESP32 update ability and password
+ota:
+  - platform: esphome
+    password: !secret api_encryption_key_ap_password_ota_password
