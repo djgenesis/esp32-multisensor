@@ -2,7 +2,7 @@
 packages:
   remote_package_shorthand: github://djgenesis/esp32-multisensor/main.yaml
 esphome:
-  # This will allow for project identification, configuration and updates.
+# This will allow for project identification, configuration and updates.
 # Project section is needed for dashboard_import to work
   project:
 # Replace with your project name in the form of "yourgitusername.projecttitle1.projecttitle2"
