@@ -1,3 +1,11 @@
+#############################################################################################
+# YOU SHOULD HAVE IN YOUR SECRETS FILE THE FOLLOWING THREE LINES OR THE PROCESS WONT WORK
+# SET ANY DUMMY VALUES FOR INITIAL FACTORY BIN COMPILATION
+#############################################################################################
+# wifi_ssid: "nVZCSnZ+KotnKOQQ4S4z5gH8KU4OOPjX"
+# wifi_password: "nVZCSnZ+KotnKOQQ4S4z5gH8KU4OOPjXu24x1L8ZwKI="
+# api_encryption_key_ap_password_ota_password: "KXt/w2cjBPjcEs0s7Dtp+HemiAoWMrB09Pl/duOiFNg="
+#############################################################################################
 # Get main.yaml. Replace with your own main.yaml file location
 packages:
   remote_package_shorthand: github://djgenesis/esp32-multisensor/main.yaml
