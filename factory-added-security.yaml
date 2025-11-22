@@ -24,17 +24,19 @@ improv_serial:
 wifi:
   ap:
 # Refer it from your secrets file or hard code it. Optional for the factory yaml but advised to have for security purposes in your main.
-    password: !secret api_encryption_key_ap_password_ota_password
+    password: !secret wifi_password
 # ESPHome API encryption
 api:
   encryption:
 # Refer it from your secrets file or hard code it
-    key: !secret api_encryption_key_ap_password_ota_password
+    key: {}
+#    key: !secret api_encryption_key_ap_password_ota_password
 # ESPHome Over-The-Air ESP32 update ability and password
 ota:
   - platform: esphome
 # Refer it from your secrets file or hard code it
-    password: !secret api_encryption_key_ap_password_ota_password
+    password: {}
+#    password: !secret api_encryption_key_ap_password_ota_password
 # Logs. Change Logs level to your liking (https://esphome.io/components/logger/#log-levels)
 logger:
   level: DEBUG
