@@ -11,11 +11,7 @@ esp32:
   framework:
     type: esp-idf
 api:
-  encryption:
-    key: {}
 ota:
-  - platform: esphome
-    password: {}
 # Optional: Change your Logs level to your liking (se here: https://esphome.io/components/logger/#log-levels)
 logger:
   level: DEBUG
