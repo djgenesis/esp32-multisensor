@@ -12,7 +12,7 @@ esp32:
     type: esp-idf
 api:
 ota:
-# Optional: Change your Logs level to your liking (se here: https://esphome.io/components/logger/#log-levels)
+  - platform: esphome
 logger:
   level: DEBUG
   logs:
