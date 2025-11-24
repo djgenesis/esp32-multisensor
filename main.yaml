@@ -21,7 +21,6 @@ logger:
 wifi:
   id: wifi_component
   ap:
-    password: !secret wifi_password
 improv_serial:
 captive_portal:
 esp32_improv:
