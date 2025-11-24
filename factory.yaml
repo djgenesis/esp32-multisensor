@@ -8,7 +8,7 @@
 #############################################################################################
 # Replace with your own main.yaml file location
 packages:
-  remote_package_shorthand: github://djgenesis/esp32-multisensor/main.yaml
+  remote_package_shorthand: github://djgenesis/esp32-multisensor/main.yaml@main
 esphome:
 # This will allow for project identification, configuration and updates.
 # Project section is needed for dashboard_import to work
