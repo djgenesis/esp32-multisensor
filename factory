@@ -6,35 +6,53 @@
 # wifi_password: "nVZCSnZ+KotnKOQQ4S4z5gH8KU4OOPjXu24x1L8ZwKI="
 # api_encryption_key_ap_password_ota_password: "KXt/w2cjBPjcEs0s7Dtp+HemiAoWMrB09Pl/duOiFNg="
 #############################################################################################
-# Get main.yaml. Replace with your own main.yaml file location
+# Replace with your own main.yaml file location
 packages:
   remote_package_shorthand: github://djgenesis/esp32-multisensor/main.yaml
 esphome:
-  # This will allow for project identification, configuration and updates.
-# Set Project. Project section is needed for dashboard_import to work
+# This will allow for project identification, configuration and updates.
+# Project section is needed for dashboard_import to work
   project:
-# Set Project name. Replace with your project name in the form of "yourgitusername.projecttitle1.projecttitle2"
+# Replace with your project name in the form of "yourgitusername.projecttitle1.projecttitle2"
     name: djgenesis.esp32-multisensor
-# Set Project version. Replace with whatever version you wish
+# Replace with whatever version you wish
     version: "1"
 # Trigger ESPhome to auto discover and "adopt" the main yaml file (public location).
 dashboard_import:
-# Get main.yaml. Replace with your own main.yaml file location
+# Replace with your own main.yaml file location
   package_import_url: github://djgenesis/esp32-multisensor/main.yaml@main
 # Import the full main yaml configuartion under your discovered device in ESPHome 
   import_full_config: true
-# Provision WIFI credebtials through WIFI Access Point
-wifi:
-  ap:
 # Provision WIFI credebtials through Bluetooth LE
 esp32_improv:
   authorizer: none
-# Provision WIFI credentials through WIFI Access Point (UI portal)
-captive_portal:
 # Provision WIFI credebtials through PC USB port
 improv_serial:
-# ESPHome API communication
+# Provision WIFI credebtials through WIFI Access Point
+wifi:
+  ap:
+# Refer it from your secrets file or hard code it. Optional for the factory yaml but advised to have for security purposes in your main.
+#    password: !secret wifi_password
+# ESPHome API encryption
 api:
+#  encryption:
+# Refer it from your secrets file or hard code it
+#    key: {}
+#    key: !secret api_encryption_key_ap_password_ota_password
+# ESPHome Over-The-Air ESP32 update ability and password
+ota:
+  - platform: esphome
+# Refer it from your secrets file or hard code it
+#    password: {}
+#    password: !secret api_encryption_key_ap_password_ota_password
+# Logs. Change Logs level to your liking (https://esphome.io/components/logger/#log-levels)
+logger:
+  level: DEBUG
+  logs:
+    sensor: WARN
+    text_sensor: WARN
+# (WIFI) Access Point portal to provision WIFI credentials
+captive_portal:
 # ESPHome Over-The-Air update ability
 ota:
   - platform: esphome
