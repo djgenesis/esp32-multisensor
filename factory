@@ -23,16 +23,6 @@ dashboard_import:
   package_import_url: github://djgenesis/esp32-multisensor/main.yaml@main
 # Import the full main yaml configuartion under your discovered device in ESPHome 
   import_full_config: true
-# Provision WIFI credebtials through Bluetooth LE
-esp32_improv:
-  authorizer: none
-# Provision WIFI credebtials through PC USB port
-improv_serial:
-# Provision WIFI credebtials through WIFI Access Point
-wifi:
-  ap:
-# Refer it from your secrets file or hard code it. Optional for the factory yaml but advised to have for security purposes in your main.
-#    password: !secret wifi_password
 # ESPHome API encryption
 api:
 #  encryption:
@@ -45,17 +35,18 @@ ota:
 # Refer it from your secrets file or hard code it
 #    password: {}
 #    password: !secret api_encryption_key_ap_password_ota_password
-# Logs. Change Logs level to your liking (https://esphome.io/components/logger/#log-levels)
-logger:
-  level: DEBUG
-  logs:
-    sensor: WARN
-    text_sensor: WARN
+# Provision WIFI credebtials through Bluetooth LE
+esp32_improv:
+  authorizer: none
+# Provision WIFI credebtials through PC USB port
+improv_serial:
+# Provision WIFI credebtials through WIFI Access Point
+wifi:
+  ap:
+# Refer it from your secrets file or hard code it. Optional for the factory yaml but advised to have for security purposes in your main.
+#    password: !secret wifi_password
 # (WIFI) Access Point portal to provision WIFI credentials
 captive_portal:
-# ESPHome Over-The-Air update ability
-ota:
-  - platform: esphome
 # Logs. Change Logs level to your liking (https://esphome.io/components/logger/#log-levels)
 logger:
   level: DEBUG
