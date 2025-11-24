@@ -13,18 +13,18 @@ esp32:
 api:
 ota:
   - platform: esphome
+wifi:
+  id: wifi_component
+  ap:
+captive_portal:
+improv_serial:
+esp32_improv:
+  id: improv_component
+  authorizer: none
 logger:
   level: DEBUG
   logs:
     sensor: WARN
     text_sensor: WARN
-wifi:
-  id: wifi_component
-  ap:
-improv_serial:
-captive_portal:
-esp32_improv:
-  id: improv_component
-  authorizer: none
 packages:
   remote_package_shorthand: github://djgenesis/esp32-multisensor/remote_package.yaml
