@@ -34,7 +34,7 @@ packages:
 12. A portal to insert your WIFI credentials will open. These will permanently be stored in your ESP32s memory (Unless your reflash, erase etc your ESP32).
 13. Head to ESPHome. After some seconds ESPHome should show it as "Discovered".
 14. "Take Control" of the device.
-15. Select "Update All" to test that updating also works. (Optional but suggested)
+15. Select "Update All" to ensure that updating also works. IF anything fails first click "Clean All", close popup and again "Update All".   
 16. Head to HHome Assistant -> Settings - > Devices. You should see the sensor appear there as well.
 17. Click "Add" and select and Area
 
