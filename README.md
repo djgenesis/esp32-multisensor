@@ -29,6 +29,7 @@ packages:
 9. Install the downloaded bin file. You might need to hold pressing a button of ESP32 for some seconds. If so do it before selecting Install and release after you see "Erasing". Wait until successfull installation.
 
 **Steps to follow to add the device in ESPHome and Home Assistant (ie. End User):**
+
 11. Connect to your ESP32 WIFI Access Point. No password needed
 12. A portal to insert your WIFI credentials will open. These will permanently be stored in your ESP32s memory (Unless your reflash, erase etc your ESP32).
 13. Head to ESPHome. After some seconds ESPHome should show it as "Discovered".
