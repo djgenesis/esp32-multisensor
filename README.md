@@ -27,7 +27,7 @@ packages:
 7. After the compilation of the bin file, download it and open https://web.esphome.io/?dashboard_install
 8. Connect your device. here you might need to download and install some drivers.
 9. Install the downloaded bin file. You might need to hold pressing a button of ESP32 for some seconds. If so do it before selecting Install and release after you see "Erasing"
-After successfull installation, the following steps are for the end user:
+**After successfull installation, the following steps are for the end user:**
 11. Connect to your ESP32 WIFI Access Point. No password needed
 12. A portal to insert your WIFI credentials will open. These will permanently be stored in your ESP32s memory (Unless your reflash, erase etc your ESP32).
 13. Head to ESPHome. After some seconds ESPHome should show it as "Discovered".
