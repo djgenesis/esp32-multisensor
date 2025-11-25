@@ -11,7 +11,7 @@ Factory YAML file (Which you create the .bin file with)
 Main YAML file (Which will automatically be embedded within your discovered device in ESPHome)
 Remote_package YAML file (Where you have all the details of all your sensors)
 
-Steps to follow (Remember to change the folowing urls to YOUR urls:
+Steps to follow (Remember to change the folowing urls to YOUR urls):
 1. Fork this repository
 2. Add a "New Device" in ESPHome
 3. Select "New Device Setup"
