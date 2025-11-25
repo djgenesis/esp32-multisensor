@@ -18,8 +18,10 @@ Steps to follow (Remember to change the folowing urls to YOUR urls):
 4. Give it any name
 5. Select your Device type (the current setup is for ESP32 - not variations)
 6. Skip the Installation and "Edit" the yaml to include ONLY these 2 lines
+```
 packages:
   remote_package_shorthand: github://djgenesis/esp32-multisensor/factory.yaml@main
+```
 5. Click Install
 6. Select "Plug into this Computer"
 7. After the compilation of the bin file, download it and open https://web.esphome.io/?dashboard_install
