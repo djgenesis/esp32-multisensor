@@ -11,8 +11,8 @@ Factory YAML file (Which you create the .bin file with)
 Main YAML file (Which will automatically be embedded within your discovered device in ESPHome)
 Remote_package YAML file (Where you have all the details of all your sensors)
 
-Steps to follow (Remember to change the folowing urls to YOUR urls):
-1. Fork this repository
+**Steps to follow to flash the bin (Remember to change the folowing urls to YOUR urls):
+**1. Fork this repository
 2. Add a "New Device" in ESPHome
 3. Select "New Device Setup"
 4. Give it any name
@@ -26,13 +26,15 @@ packages:
 6. Select "Plug into this Computer"
 7. After the compilation of the bin file, download it and open https://web.esphome.io/?dashboard_install
 8. Connect your device. here you might need to download and install some drivers.
-9. Install the downloaded bin file. You might need to hold pressing a button of ESP32 for some seconds. If so do it before selecting Install and release after you see "Erasing"
-**After successfull installation, the following steps are for the end user:**
-11. Connect to your ESP32 WIFI Access Point. No password needed
+9. Install the downloaded bin file. You might need to hold pressing a button of ESP32 for some seconds. If so do it before selecting Install and release after you see "Erasing". Wait until successfull installation.
+
+**Steps to follow to add the device in ESPHome and Home Assistant (ie. End User):
+**11. Connect to your ESP32 WIFI Access Point. No password needed
 12. A portal to insert your WIFI credentials will open. These will permanently be stored in your ESP32s memory (Unless your reflash, erase etc your ESP32).
 13. Head to ESPHome. After some seconds ESPHome should show it as "Discovered".
 14. "Take Control" of the device.
 15. Select "Update All" to test that updating also works. (Optional but suggested)
 16. Head to HHome Assistant -> Settings - > Devices. You should see the sensor appear there as well.
 17. Click "Add" and select and Area
-Congratulations! Thats it!
+
+**Congratulations! Thats it!**
