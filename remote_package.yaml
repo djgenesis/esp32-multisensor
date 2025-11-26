@@ -13,6 +13,7 @@ time:
 # BLUETOOTH TRACKING (Generic enablement is moved to the package)
 esp32_ble_tracker:
 bluetooth_proxy:
+  active: true
 # UART CONFIGURATION for HLK-LD2402 Radar
 uart:
   id: uart_bus
