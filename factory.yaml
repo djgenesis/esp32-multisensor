@@ -1,6 +1,6 @@
 # In your original yaml in ESPHome insert only the following two lines
-# packages:
-#  remote_package_shorthand: github://djgenesis/esp32-multisensor/factory.yaml@main
+#packages:
+# remote_package_shorthand: github://djgenesis/esp32-multisensor/factory.yaml@main
 #############################################################################################
 # YOU SHOULD HAVE IN YOUR SECRETS FILE THE FOLLOWING THREE LINES OR THE PROCESS WONT WORK
 # SET ANY DUMMY VALUES FOR INITIAL FACTORY BIN COMPILATION
