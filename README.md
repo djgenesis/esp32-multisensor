@@ -1,3 +1,5 @@
+The purpose is the same with [esp32-multisensor-secrets](https://github.com/djgenesis/esp32-multisensor-secrets) but WITHOUT secrets file added to the process!
+
 Steps to follow to flash multiple ESP32 with the same .bin file and be auto discovered and adopted by ESPHome - and then Home Assistant - as unique devices.
 The devices can be discovered and adopted straight into Home Assistant without being adopted necessarily in ESPHome.
 The purpose of having them in ESPHome as well though is to be able to Update them once in a while whenever new ESPHome/Home Assistant changes occur and deal with performance issues or even deprecate things.
